@@ -1,0 +1,18 @@
+<%
+	for(var i = 0; i < data.length; i++) {
+		var category = data[i];
+%>	
+	<tr id="table-category" data-no='<%=category.no%>'>
+		<td><%=category.no%> </td>
+		<td><%=category.name%> </td>
+		<td><%=category.count%> </td>
+		<td><%=category.desc%> </td>
+
+		<!-- id 가져오기 -->
+		
+		<td><a href="" data-no='<%=category.no%>'><img src="/jblog03/assets/images/delete.jpg"></a></td>
+	</tr>	
+<%
+	}
+%>
+	

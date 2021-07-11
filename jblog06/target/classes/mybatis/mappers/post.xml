@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="post">
+	<insert id="insert" parameterType="postvo">	
+	<![CDATA[ 
+	 INSERT INTO
+	 	post 
+	 VALUES
+	 	(null , #{title } ,#{contents } , now() ,#{category_no })
+	]]>
+	</insert>
+	
+	<select id="getPostList" parameterType="map" resultType="postvo">
+	
+	
+	SELECT
+		no, title, contents, reg_date, category_no
+	FROM
+		post
+	WHERE
+		<choose>
+			<when test="categoryNo == 0">
+				category_no = (SELECT no
+								FROM category
+								WHERE blog_id = #{id }
+								ORDER BY name
+								LIMIT 1)
+			</when>
+			<otherwise>
+				category_no = #{categoryNo }
+			</otherwise>
+		</choose>
+	ORDER BY
+			no DESC
+	LIMIT 5
+			
+	</select>
+	
+	<select id="getPostOne" parameterType="map" resultType="postvo">
+	
+	
+	SELECT
+		no, title, contents, reg_date, category_no
+	FROM
+		post
+	WHERE
+		<choose>
+			<when test="postNo == 0 and categoryNo == 0">
+				category_no = (SELECT no
+								FROM category
+								WHERE blog_id = #{id }
+								ORDER BY name
+								LIMIT 1)
+				ORDER BY 
+					no desc
+                LIMIT 1
+			</when>
+			<when test="postNo != 0">
+				category_no = #{categoryNo } AND
+				no = #{postNo }
+			</when>
+			<otherwise>
+				category_no = #{categoryNo } 
+				ORDER BY 
+					no DESC
+				LIMIT 1
+			</otherwise>
+		</choose>
+	</select>
+	
+</mapper>

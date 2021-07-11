@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="category">
+
+	<insert id="insertDefaultCategory" parameterType="String">	
+	 INSERT INTO
+	 	category 
+	 VALUES
+	 	(null ,'default' ,'default description' ,now() ,#{blog_id})
+	</insert>
+	
+	
+	
+	<insert id="insert" parameterType="categoryvo">	
+	 INSERT INTO
+	 	category 
+	 VALUES
+	 	(null , #{name} ,#{desc} ,now() ,#{blog_id})
+	</insert>
+	
+	
+	
+	<select id="findAllCount" resultType="double">
+	SELECT 
+		count(*)
+	FROM 
+		category
+	</select>
+	
+	<select id="getCategory" parameterType="string" resultType="categoryvo">
+	SELECT
+		c.no, c.name, c.`desc`, c.reg_date, c.blog_id, p.count AS count
+	FROM
+		category c
+	LEFT OUTER JOIN
+		(SELECT 
+			category_no, count(title) AS count 
+		FROM 
+			post 
+		GROUP BY 
+			category_no) p
+	ON
+		c.no = p.category_no
+	WHERE
+		c.blog_id = #{id }
+	ORDER BY
+		name
+	</select>
+
+	<delete id="delete" parameterType="map">
+	DELETE FROM 
+		category 
+	WHERE 
+		no = #{no } AND 
+		blog_id = #{id };	
+	</delete>
+
+</mapper>

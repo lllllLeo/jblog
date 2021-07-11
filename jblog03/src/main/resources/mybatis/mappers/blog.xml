@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blog">
+
+<!-- 	<resultMap type="HashMap" id="blogMap">
+		<result property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="logo" column="logo"/>
+		<result property="name" column="name"/>
+		<result property="desc" column="desc"/>
+		<result property="reg_date" column="reg_date"/> 카테고리 시간순 정렬  no는 겹쳐서 에러뜰거같아서
+		<result property="name" column="name"/>
+	</resultMap> -->
+	
+	<insert id="insert" parameterType="blogvo">	
+	 INSERT INTO
+	 	blog 
+	 VALUES
+	 	(#{id } , #{title } , '/assets/images/default_image.jpg')
+	</insert>
+	
+	<select id="getBlog" parameterType="String" resultType="blogvo">
+	SELECT 
+		title, logo
+	FROM
+		blog
+	WHERE
+		id = #{id }
+	</select>
+	
+	<update id="updateBlog" parameterType="blogvo">
+	  UPDATE 
+			blog 
+	  <choose>
+	    <when test="logo != null">
+		SET 
+			title = #{title }, logo = #{logo }
+		</when>
+		<otherwise>
+		SET 
+			title = #{title}
+		</otherwise>
+		</choose>
+	  WHERE
+	  		id = #{id }
+	</update> 
+	
+<!-- 	<select id="getFirstCategoryCount" resultType="int" parameterType="int">
+		select 
+			count(no) 
+		from 
+			post 
+		where 
+			category_no = (select 
+								c.no
+							from 
+								category c
+							inner join
+								blog b
+							on
+								c.blog_id = b.id
+							where
+								b.id = #{id }
+							order by 
+								c.name 
+							limit 1);
+	</select>
+	
+	<select id="getBlogMain" parameterType="map" resultMap="blogMap">
+		SELECT 
+			c.no AS category_no, c.name AS category_name, p.category_no as post_category_no, p.title, p.contents 
+		FROM 
+			category c
+		LEFT JOIN
+		    (SELECT 
+				c.no, p.category_no, p.title, p.contents 
+ 			 FROM 
+				post p
+			 INNER JOIN
+			 	category c
+			 ON
+			 	p.category_no = c.no
+			 ORDER BY 
+			 	c.name
+			 LIMIT 
+			 	0, 5) p 
+		ON
+			c.no = p.category_no 
+		WHERE 
+			c.blog_id = #{id }
+		ORDER BY 
+			c.name;
+	</select> -->
+	
+	
+	
+
+
+</mapper>
